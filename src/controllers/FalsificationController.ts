@@ -1,9 +1,20 @@
-import { Body, Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { FalsificationRequestTO } from '../dtos/falsification/FalsificationRequestTO';
 import { FalsificationResponseTO } from '../dtos/falsification/FalsificationResponseTO';
 
 @Controller('falsification')
+@UsePipes(new ValidationPipe())
 export class FalsificationController {
+  @Post('/analyze')
+  @HttpCode(HttpStatus.OK)
   async analyze(
     @Body() params: FalsificationRequestTO,
   ): Promise<FalsificationResponseTO> {
