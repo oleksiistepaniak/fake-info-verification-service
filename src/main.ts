@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionFilter } from './exception-filters/AllExceptionFilter';
+import { AppDb } from './database/AppDatabase';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +16,8 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new AllExceptionFilter());
+
+  await new AppDb(new ConfigService()).initializeDatabase();
 
   await app.listen(3000);
 }

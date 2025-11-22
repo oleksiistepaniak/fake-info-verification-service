@@ -3,12 +3,14 @@ import { InferenceClient } from '@huggingface/inference';
 import { ConfigService } from '@nestjs/config';
 import { FalsificationResponseTO } from '../dtos/falsification/FalsificationResponseTO';
 import { TextClassificationOutput } from '@huggingface/tasks/src/tasks/text-classification/inference';
+import { TModelType } from '../types';
 
 @Injectable()
 export class FalsificationService {
   private client: InferenceClient;
 
-  private readonly MODEL_ID = 'hamzab/roberta-fake-news-classification';
+  private readonly MODEL_ID: TModelType =
+    'hamzab/roberta-fake-news-classification';
 
   constructor(private configService: ConfigService) {
     this.client = new InferenceClient(
