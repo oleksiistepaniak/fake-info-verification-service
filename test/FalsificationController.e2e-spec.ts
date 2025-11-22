@@ -3,9 +3,10 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
 import * as request from 'supertest';
 import { FalsificationRequestTO } from '../src/dtos/falsification/FalsificationRequestTO';
+import { AllExceptionFilter } from '../src/exception-filters/AllExceptionFilter';
 
 const sample: FalsificationRequestTO = {
-  text: 'Уряд ввів податок на повітря для власників електросамокатів з 1 березня, це викликало масові протести екологічних активістів по всій країні.',
+  text: 'Volodymyr Zelenskyy is died! Ukraine has no more soldiers! Ukraine has already lose this war!',
 };
 
 describe('FalsificationController.e2e.test', () => {
@@ -17,6 +18,7 @@ describe('FalsificationController.e2e.test', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new AllExceptionFilter());
     await app.init();
   });
 
@@ -27,9 +29,8 @@ describe('FalsificationController.e2e.test', () => {
         .send({ text: 123 })
         .expect(HttpStatus.BAD_REQUEST)
         .expect({
-          error: 'Bad Request',
           statusCode: 400,
-          message: ['invalid_text_length', 'invalid_text_type'],
+          message: 'invalid_text_type',
         });
     });
 
@@ -39,9 +40,8 @@ describe('FalsificationController.e2e.test', () => {
         .send({ text: '' })
         .expect(HttpStatus.BAD_REQUEST)
         .expect({
-          error: 'Bad Request',
           statusCode: 400,
-          message: ['invalid_text_length'],
+          message: 'invalid_text_length',
         });
     });
 
@@ -51,9 +51,8 @@ describe('FalsificationController.e2e.test', () => {
         .send({ text: 'too small text for analyze endpoint' })
         .expect(HttpStatus.BAD_REQUEST)
         .expect({
-          error: 'Bad Request',
           statusCode: 400,
-          message: ['invalid_text_length'],
+          message: 'invalid_text_length',
         });
     });
 
@@ -63,9 +62,9 @@ describe('FalsificationController.e2e.test', () => {
         .send(sample)
         .expect(HttpStatus.OK)
         .expect({
-          isFake: false,
-          confidenceScore: 0.9,
-          modelInfo: 'OpenAI GPT-3.5 Turbo',
+          isFake: true,
+          confidenceScore: 0.995747983455658,
+          modelInfo: 'hamzab/roberta-fake-news-classification',
         });
     });
   });

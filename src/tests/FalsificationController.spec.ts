@@ -1,14 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FalsificationController } from '../controllers/FalsificationController';
 import { FalsificationResponseTO } from '../dtos/falsification/FalsificationResponseTO';
+import { FalsificationService } from '../services/FalsificationService';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 describe('FalsificationController.test', () => {
   let falsificationController: FalsificationController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
+      imports: [
+        await ConfigModule.forRoot({
+          isGlobal: true,
+        }),
+      ],
       controllers: [FalsificationController],
-      providers: [],
+      providers: [FalsificationService, ConfigService],
     }).compile();
 
     falsificationController = app.get<FalsificationController>(
@@ -17,7 +24,9 @@ describe('FalsificationController.test', () => {
   });
 
   it('should return a test result', async () => {
-    const result = await falsificationController.analyze({ text: 's' });
+    const result = await falsificationController.analyze({
+      text: 'The earth is revolving around the sun.',
+    });
 
     expect(result).toBeDefined();
     expect(result).toHaveProperty('isFake');
@@ -25,8 +34,8 @@ describe('FalsificationController.test', () => {
     expect(result).toHaveProperty('modelInfo');
     expect(result).toEqual<FalsificationResponseTO>({
       isFake: false,
-      confidenceScore: 0.9,
-      modelInfo: 'OpenAI GPT-3.5 Turbo',
+      confidenceScore: 0.07667464017868042,
+      modelInfo: 'hamzab/roberta-fake-news-classification',
     });
   });
 });
