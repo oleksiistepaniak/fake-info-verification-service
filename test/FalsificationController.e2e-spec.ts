@@ -56,6 +56,17 @@ describe('FalsificationController.e2e.test', () => {
         });
     });
 
+    it('empty text with spaces', () => {
+      return request(app.getHttpServer())
+        .post('/falsification/analyze')
+        .send({ text: '                                                   ' })
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          statusCode: 400,
+          message: 'invalid_text_length',
+        });
+    });
+
     it('success', () => {
       return request(app.getHttpServer())
         .post('/falsification/analyze')
