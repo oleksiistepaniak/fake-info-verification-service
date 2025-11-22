@@ -1,4 +1,11 @@
-import { ClientSession, Collection, Db, MongoClient } from 'mongodb';
+import {
+  ClientSession,
+  Collection,
+  Db,
+  MongoClient,
+  OptionalId,
+  WithoutId,
+} from 'mongodb';
 import { ConfigService } from '@nestjs/config';
 import { FalsificationRecord } from './records/FalsificationRecord';
 import { Injectable } from '@nestjs/common';
@@ -7,7 +14,9 @@ import { Injectable } from '@nestjs/common';
 export class AppDb {
   private readonly _client: MongoClient;
   private readonly _db: Db;
-  private readonly _falsificationsCollection: Collection<FalsificationRecord>;
+  private readonly _falsificationsCollection: Collection<
+    OptionalId<FalsificationRecord>
+  >;
 
   constructor(private readonly configService: ConfigService) {
     this._client = new MongoClient(this.configService.get<string>('DB_URL'));
@@ -15,7 +24,7 @@ export class AppDb {
     this._falsificationsCollection = this._db.collection('falsifications');
   }
 
-  get falsificationsCollection(): Collection<FalsificationRecord> {
+  get falsificationsCollection(): Collection<WithoutId<FalsificationRecord>> {
     return this._falsificationsCollection;
   }
 

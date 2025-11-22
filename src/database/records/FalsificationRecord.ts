@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 
 export interface FalsificationRecord {
-  id: ObjectId;
+  _id: ObjectId;
   text: string;
   isFake: boolean;
   modelInfo: string;
