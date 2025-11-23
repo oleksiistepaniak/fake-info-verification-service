@@ -7,12 +7,13 @@ import { TextClassificationOutput } from '@huggingface/tasks/src/tasks/text-clas
 import { FalsificationRecord } from '../database/records/FalsificationRecord';
 import { FalsificationRepository } from '../repositories/FalsificationRepository';
 import { ObjectId } from 'mongodb';
+import { TModelType } from '../types';
 
 @Injectable()
 export class FalsificationService {
-  private client: InferenceClient;
+  private readonly client: InferenceClient;
 
-  private readonly MODEL_ID = 'hamzab/roberta-fake-news-classification';
+  private readonly modelId: TModelType;
 
   constructor(
     private configService: ConfigService,
@@ -22,6 +23,7 @@ export class FalsificationService {
     this.client = new InferenceClient(
       this.configService.get<string>('HF_TOKEN'),
     );
+    this.modelId = this.configService.get<TModelType>('ML_MODEL');
   }
 
   async detectFakeNews(text: string): Promise<FalsificationResponseTO> {
@@ -43,7 +45,7 @@ export class FalsificationService {
 
       try {
         classifications = await this.client.textClassification({
-          model: this.MODEL_ID,
+          model: this.modelId,
           inputs: text,
         });
       } catch (e: unknown) {
@@ -63,7 +65,7 @@ export class FalsificationService {
         _id: new ObjectId(),
         isFake: fakeLabel.score > trueLabel.score,
         confidenceScore: fakeLabel.score,
-        modelInfo: this.MODEL_ID,
+        modelInfo: this.modelId,
         text,
         createdAt: new Date(),
       };
