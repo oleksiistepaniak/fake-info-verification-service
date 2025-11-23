@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -11,9 +12,11 @@ import { FalsificationRequestTO } from '../../dtos/falsification/FalsificationRe
 import { FalsificationResponseTO } from '../../dtos/falsification/FalsificationResponseTO';
 import { FalsificationService } from '../../services/falsification/FalsificationService';
 import { ApiHelper } from '../../helpers/ApiHelper';
+import { JwtGuard } from '../../guards/JwtGuard';
 
 @Controller('falsification')
 @UsePipes(new ValidationPipe())
+@UseGuards(JwtGuard)
 export class FalsificationController {
   constructor(private readonly falsificationService: FalsificationService) {}
 
