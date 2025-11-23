@@ -3,6 +3,8 @@ import { FalsificationController } from '../controllers/FalsificationController'
 import { FalsificationResponseTO } from '../dtos/falsification/FalsificationResponseTO';
 import { FalsificationService } from '../services/FalsificationService';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AppDb } from '../database/AppDatabase';
+import { FalsificationRepository } from '../repositories/FalsificationRepository';
 
 describe('FalsificationController.test', () => {
   let falsificationController: FalsificationController;
@@ -15,12 +17,25 @@ describe('FalsificationController.test', () => {
         }),
       ],
       controllers: [FalsificationController],
-      providers: [FalsificationService, ConfigService],
+      providers: [
+        AppDb,
+        FalsificationService,
+        ConfigService,
+        FalsificationRepository,
+      ],
     }).compile();
 
     falsificationController = app.get<FalsificationController>(
       FalsificationController,
     );
+  });
+
+  it('should throw an error if the text is empty', async () => {
+    await expect(
+      falsificationController.analyze({
+        text: '          ',
+      }),
+    ).rejects.toThrow('invalid_text_length');
   });
 
   it('should return a test result', async () => {
@@ -37,5 +52,5 @@ describe('FalsificationController.test', () => {
       confidenceScore: 0.07667464017868042,
       modelInfo: 'hamzab/roberta-fake-news-classification',
     });
-  });
+  }, 20000);
 });

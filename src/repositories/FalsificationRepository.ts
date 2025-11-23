@@ -36,6 +36,7 @@ export class FalsificationRepository {
       { _id: id },
       { session },
     );
+    if (!result) throw new BadRequestException('falsification_not_found');
     return result;
   }
 
