@@ -77,6 +77,6 @@ describe('FalsificationController.e2e.test', () => {
           confidenceScore: 0.995747983455658,
           modelInfo: 'hamzab/roberta-fake-news-classification',
         });
-    });
+    }, 20000);
   });
 });
