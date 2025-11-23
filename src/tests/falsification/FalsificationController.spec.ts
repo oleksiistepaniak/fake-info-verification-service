@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FalsificationController } from '../controllers/FalsificationController';
-import { FalsificationResponseTO } from '../dtos/falsification/FalsificationResponseTO';
-import { FalsificationService } from '../services/FalsificationService';
+import { FalsificationController } from '../../controllers/falsification/FalsificationController';
+import { FalsificationResponseTO } from '../../dtos/falsification/FalsificationResponseTO';
+import { FalsificationService } from '../../services/falsification/FalsificationService';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppDb } from '../database/AppDatabase';
-import { FalsificationRepository } from '../repositories/FalsificationRepository';
+import { AppDb } from '../../database/AppDatabase';
+import { FalsificationRepository } from '../../repositories/falsification/FalsificationRepository';
 
 describe('FalsificationController.test', () => {
   let falsificationController: FalsificationController;

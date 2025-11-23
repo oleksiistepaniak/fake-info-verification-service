@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { AppDb } from '../database/AppDatabase';
-import { FalsificationRecord } from '../database/records/FalsificationRecord';
+import { AppDb } from '../../database/AppDatabase';
+import { FalsificationRecord } from '../../database/records/FalsificationRecord';
 import { ClientSession, ObjectId } from 'mongodb';
-import { MongoHelper } from '../helpers/MongoHelper';
+import { MongoHelper } from '../../helpers/MongoHelper';
 
 @Injectable()
 export class FalsificationRepository {
@@ -44,10 +44,9 @@ export class FalsificationRepository {
     session: ClientSession,
     text: string,
   ): Promise<FalsificationRecord | null> {
-    const result = await this.db.falsificationsCollection.findOne(
+    return await this.db.falsificationsCollection.findOne(
       { text },
       { session },
     );
-    return result;
   }
 }

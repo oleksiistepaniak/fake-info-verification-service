@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InferenceClient } from '@huggingface/inference';
 import { ConfigService } from '@nestjs/config';
-import { FalsificationResponseTO } from '../dtos/falsification/FalsificationResponseTO';
-import { AppDb } from '../database/AppDatabase';
+import { FalsificationResponseTO } from '../../dtos/falsification/FalsificationResponseTO';
+import { AppDb } from '../../database/AppDatabase';
 import { TextClassificationOutput } from '@huggingface/tasks/src/tasks/text-classification/inference';
-import { FalsificationRecord } from '../database/records/FalsificationRecord';
-import { FalsificationRepository } from '../repositories/FalsificationRepository';
+import { FalsificationRecord } from '../../database/records/FalsificationRecord';
+import { FalsificationRepository } from '../../repositories/falsification/FalsificationRepository';
 import { ObjectId } from 'mongodb';
-import { TModelType } from '../types';
+import { TModelType } from '../../types';
 
 @Injectable()
 export class FalsificationService {

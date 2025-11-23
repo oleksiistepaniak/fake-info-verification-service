@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
-import { AppDb } from '../database/AppDatabase';
-import { FalsificationRepository } from '../repositories/FalsificationRepository';
+import { AppDb } from '../../database/AppDatabase';
+import { FalsificationRepository } from '../../repositories/falsification/FalsificationRepository';
 import { ObjectId } from 'mongodb';
-import { FalsificationRecord } from '../database/records/FalsificationRecord';
-import { NO_SESSION } from '../constants';
+import { FalsificationRecord } from '../../database/records/FalsificationRecord';
+import { NO_SESSION } from '../../constants';
 
 describe('FalsificationRepository.test', () => {
   let falsificationRepository: FalsificationRepository;

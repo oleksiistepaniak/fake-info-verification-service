@@ -7,10 +7,10 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { FalsificationRequestTO } from '../dtos/falsification/FalsificationRequestTO';
-import { FalsificationResponseTO } from '../dtos/falsification/FalsificationResponseTO';
-import { FalsificationService } from '../services/FalsificationService';
-import { ApiHelper } from '../helpers/ApiHelper';
+import { FalsificationRequestTO } from '../../dtos/falsification/FalsificationRequestTO';
+import { FalsificationResponseTO } from '../../dtos/falsification/FalsificationResponseTO';
+import { FalsificationService } from '../../services/falsification/FalsificationService';
+import { ApiHelper } from '../../helpers/ApiHelper';
 
 @Controller('falsification')
 @UsePipes(new ValidationPipe())

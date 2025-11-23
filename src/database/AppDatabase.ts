@@ -9,6 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { FalsificationRecord } from './records/FalsificationRecord';
 import { Injectable } from '@nestjs/common';
+import { AccountRecord } from './records/AccountRecord';
 
 @Injectable()
 export class AppDb {
@@ -17,15 +18,21 @@ export class AppDb {
   private readonly _falsificationsCollection: Collection<
     OptionalId<FalsificationRecord>
   >;
+  private readonly _accountsCollection: Collection<OptionalId<AccountRecord>>;
 
   constructor(private readonly configService: ConfigService) {
     this._client = new MongoClient(this.configService.get<string>('DB_URL'));
     this._db = this._client.db();
     this._falsificationsCollection = this._db.collection('falsifications');
+    this._accountsCollection = this._db.collection('accounts');
   }
 
   get falsificationsCollection(): Collection<WithoutId<FalsificationRecord>> {
     return this._falsificationsCollection;
+  }
+
+  get accountsCollection(): Collection<WithoutId<AccountRecord>> {
+    return this._accountsCollection;
   }
 
   async withTransaction(
@@ -44,6 +51,10 @@ export class AppDb {
         `Connecting to Mongo to URL: ${this.configService.get<string>('DB_URL')}`,
       );
       await this._client.connect();
+      await this._accountsCollection.createIndex(
+        { email: 1 },
+        { unique: true },
+      );
       await this._falsificationsCollection.createIndex(
         { text: 1 },
         { unique: true },
