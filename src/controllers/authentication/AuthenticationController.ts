@@ -4,12 +4,14 @@ import {
   HttpStatus,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { GoogleOauthGuard } from '../../guards/GoogleOauthGuard';
 import { AuthenticationService } from '../../services/authentication/AuthenticationService';
+import { JwtGuard } from '../../guards/JwtGuard';
 
 @Controller('auth')
 export class AuthenticationController {
@@ -34,12 +36,28 @@ export class AuthenticationController {
         'FRONTEND_REDIRECT_URL',
       );
 
-      res.redirect(`${frontendUrl}?token=${jwtToken}`);
+      res.cookie('jwt', jwtToken, {
+        httpOnly: true,
+        sameSite: 'lax',
+        maxAge: 3 * 24 * 60 * 60 * 1000,
+      });
+      res.redirect(frontendUrl);
     } catch (err) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         success: false,
         message: 'google_auth_error: ' + err.message,
       });
     }
+  }
+
+  @Get('status')
+  @UseGuards(JwtGuard)
+  async status(@Req() req: Request) {
+    if (!req.user) throw new UnauthorizedException('token_not_found');
+
+    return {
+      isAuthenticated: true,
+      user: req.user,
+    };
   }
 }
